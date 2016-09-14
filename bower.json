@@ -1,0 +1,20 @@
+{
+  "name": "notes",
+  "authors": [
+    "Excalibur"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "homepage": "https://github.com/ExcaliburZhou",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "requirejs": "^2.3.1"
+  }
+}
