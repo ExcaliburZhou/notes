@@ -16,6 +16,5 @@ require.config({
 });
 
 require(['getName', 'name'],function (getName, name) {
-
     getName(name)
 });
