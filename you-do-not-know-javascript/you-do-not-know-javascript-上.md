@@ -152,6 +152,4 @@ function bind(){
 ```
 this没有明确的指向的时候,this为window;在use strict严格模式下, 此this没有指明是谁,会报错
 
-*
-
-这里面是测试git submodule的
+kdkdk
