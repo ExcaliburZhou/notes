@@ -154,4 +154,4 @@ this没有明确的指向的时候,this为window;在use strict严格模式下, �
 
 *
 
-这里面是测试xxxxx
+这里面是测
