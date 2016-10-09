@@ -1,5 +1,11 @@
 ## 阅你不知道的JavaScript(上卷).pdf笔记
 
+这本书深入讲解了js的一些比较容易让人忽略的运行机制,前几章只要工作经验足的人应该都会了解,真正比较深入的应该算第二部分的5.6章,个人感觉是本书的精华所在,颠覆了长久以来的认知...
+
+前几章节就随意做做笔记吧,重点在于后面对"类","继承"到"委托"的思维转变.
+
+
+## 第一部分
 ### 1作用域
 
 #### 1.1编译原理
@@ -57,7 +63,7 @@ LHS(3), RHS(4)
     * let--此处分隐式和显式
     * const
 
-### 4声明提升
+### 4 声明提升
     * 变量声明和函数声明,会在预编译时声明在作用域内
     * 函数优先
     * 避免块作用域中声明函数
@@ -78,3 +84,74 @@ function foo() {
     console.log( 3 );
 }
 ```
+
+### 5 作用域和闭包
+<font style="color: #f20"> 内部函数能在外部函数中调用 </font>
+
+```
+var fn;
+function foo() {
+    var a = 2;
+    function baz() {
+        console.log( a );
+    }
+    fn = baz; // 将 baz 分配给全局变量
+}
+
+function bar() {
+    fn(); // 闭包!
+}
+foo();
+bar(); // 2
+```
+闭包在foo()执行以后,由于baz被fn引用,垃圾回收机制无法回收foo的内部运行环境,形成闭包;简单来说需要先了解JS的垃圾回收机制,foo的内部作用域按理来说在foo()执行完毕就会消失,
+但是由于内部的函数baz被外部fn引用了,所以没法回收;由于这里fn是全局的,这个作用域将一直不会被回收(除非手动在某处设置fn = null解除引用关系),而且只有baz能访问到这个作用域中的其它变量,形成闭包;
+
+个人理解:准确来说,由于内部变量被引用而无法被回收的作用域,为闭包;
+
+来看几个例子:
+```
+function wait(message) {
+    setTimeout( function timer() {
+         console.log( message );
+    }, 1000 );
+}
+wait( "Hello, closure!" );
+```
+这里也形成了一个闭包, wait作用域下有个message变量,由于timer有对message的引用,所以wait的内部作用域一直没法释放, 除非setTimeout被clear;
+
+```
+function bind(){
+    var a = 1;
+
+    dom.addEventListener('click', function() {console.log(a)}, false);
+}
+```
+
+由于事件绑定, a永远得不到释放(除非解绑), bind内部其实也是个闭包环境;
+
+## 第二部分
+
+### 1 关于this
+
+省去书写时显示的上下文参数,定义的时候不关心,调用的时候才传入即可
+
+### 2 this解析
+
+#### this到底是指向哪个对象,和期的调用位置相关,而和声明位置无关
+
+#### 绑定规则
+
+* 默认绑定
+```
+    var a = 2;
+    function foo() {
+        console.log( this.a ); //2
+    }
+    foo();
+```
+this没有明确的指向的时候,this为window;在use strict严格模式下, 此this没有指明是谁,会报错
+
+*
+
+这里面是测试git submodule的
