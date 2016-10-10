@@ -152,6 +152,93 @@ function bind(){
 ```
 this没有明确的指向的时候,this为window;在use strict严格模式下, 此this没有指明是谁,会报错
 
-*
+* 隐式绑定
+```
+function foo() {
+    console.log( this.a );
+}
+var obj = {
+    a: 2,
+    foo: foo
+};
+obj.foo(); // 2
+```
+函数有引用上下文对象时,this绑定到此对象; this.a === obj.a;
+若有另一个对象为obj2,且obj2.anotherObj.foo = obj.foo,那么obj2.anotherObj.foo()执行时,this绑定到最近的obj2.anotherObj上,
+this.a === obj2.anotherObj.a
 
-这里面是测
+<font style="color: #f20"> 隐式丢失: </font>
+```
+var fn = obj.foo;
+fn();
+```
+此时fn调用时的this不会指向obj,而使用默认绑定
+
+* 显示绑定
+```
+function foo() {
+    console.log( this.a );
+}
+var obj = {
+    a:2
+};
+foo.call( obj ); // 2
+```
+.call, .apply使函数调用时this指向第一参数, .bind有类似作用
+
+* new绑定
+```
+function foo(a) {
+    this.a = a;
+}
+var bar = new foo(2);
+console.log( bar.a ); // 2
+```
+foo会将this对象返回,于是bar 即为 this;
+
+#### 优先级
+* 是否在new中,若是this则为新创建对象
+* 是否显式绑定
+* 是否隐式绑定
+* 默认绑定
+
+
+<font style="color: #f20"> this词法: </font>
+在箭头函数中,this不绑定到特定对象,而是随着环境中的this绑定,类似"继承"了上级作用域的this绑定
+
+### 3 对象
+#### 声明
+#### 类型
+#### 内容(ES6声明时属性名可计算)
+#### 属性描述符
+```
+var myObject = {};
+Object.defineProperty( myObject, "a", {
+    value: 2,
+    writable: true,
+    configurable: true,
+    enumerable: true
+});
+myObject.a; // 2
+```
+* writable是否是可修改属性
+* configurable是否可配置
+* enumerable是否可枚举
+
+#### 不变性
+* 常量:结合 writable:false 和 configurable:false 就可以创建一个真正的常量属性
+* 禁止扩展: 禁止对象添加新属性(可修改已有的)
+```
+    var myObject = { a:2};
+    Object.preventExtensions( myObject );
+    myObject.b = 3;
+    myObject.b; // undefined
+
+```
+* 密封: Object.seal(obj);不能添加也不能删除现有属性
+* 冻结: Object.freeze(obj); 不能添加,不能删除,不能修改
+
+
+#### getter 和setter
+
+有setter和getter时会忽略对象的value和writable的值;
