@@ -578,4 +578,52 @@ execCb: function (name, callback, args, exports) {
 取出queue, 加载其中的deps依赖, 加载完成后得到其返回值, 执行callback, 并将依赖的返回值当参数传入
 
 
+以下为抽出来的核心代码:
+```
+var MyModules = (function Manager() {
+    var modules = {};
 
+    function define(name, deps, impl) {
+        for (var i=0; i<deps.length; i++) {
+            deps[i] = modules[deps[i]];
+        }
+        modules[name] = impl.apply( impl, deps );
+    }
+
+    function getName(name) {
+        return modules[name];
+    }
+
+    return {
+        define: define,
+        get: getName
+    };
+})();
+```
+调用方式:
+```
+MyModules.define( "bar", [], function() {
+    function hello(who) {
+        return "Let me introduce: " + who;
+    }
+    return {
+        hello: hello
+    };
+});
+MyModules.define( "foo", ["bar"], function(bar) {
+    var name = "Excalibur";
+
+    function awesome() {
+        console.log( bar.hello( name ).toUpperCase() );
+    }
+
+    return {
+        awesome: awesome
+    };
+} );
+var bar = MyModules.get( "bar" );
+var foo = MyModules.get( "foo" );
+
+console.log(bar.hello( "Excalibur" ))
+foo.awesome()
+```
