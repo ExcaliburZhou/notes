@@ -627,3 +627,4 @@ var foo = MyModules.get( "foo" );
 console.log(bar.hello( "Excalibur" ))
 foo.awesome()
 ```
+
